@@ -1,1 +1,2 @@
-//export const UPDATE_STATUS = 'UPDATE_STATUS';
+export const CREATE_ISSUE = 'CREATE_ISSUE';
+export const CREATE_PROJECT = 'CREATE_PROJECT';
