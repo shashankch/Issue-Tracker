@@ -11,6 +11,8 @@
 - Filter by author.
 - Search by title and description.
 
+[Deployed Link](https://happy-hamilton-d701c2.netlify.app/)
+
 ![project screenshots](assets/Capture.PNG)
 ![project screenshots](assets/Capture2.PNG)
 
