@@ -16,6 +16,11 @@ import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = (theme) => ({
   formControl: {
@@ -32,7 +37,7 @@ const useStyles = (theme) => ({
     flexGrow: 1,
   },
   cardsMargin: {
-    marginTop: 50,
+    marginTop: 20,
     marginBottom: 50,
   },
   btnMargin: {
@@ -47,18 +52,6 @@ const useStyles = (theme) => ({
   },
 });
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
 const ITEM_HEIGHT = 38;
 const ITEM_PADDING_TOP = 4;
 const MenuProps = {
@@ -79,6 +72,7 @@ class CreateIssue extends Component {
       labels: [],
       newlabels: '',
       currentProject: '',
+      open: false,
     };
   }
 
@@ -146,7 +140,24 @@ class CreateIssue extends Component {
           newlabels,
         ),
       );
+
+      this.handleClickOpen();
+      this.setState({
+        title: '',
+        description: '',
+        author: '',
+        newlabels: '',
+        labels: [],
+      });
     }
+  };
+
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
   };
   render() {
     const { classes, theme } = this.props;
@@ -155,6 +166,35 @@ class CreateIssue extends Component {
     return (
       <Grid container className={classes.root2} spacing={2}>
         <Grid item xs={12}>
+          <Dialog
+            open={this.state.open}
+            onClose={this.handleClose}
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
+          >
+            <DialogTitle id='alert-dialog-title'>
+              {"Use Google's location service?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>
+                New Issue Created !!
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleClose} color='primary' autoFocus>
+                ok
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Box
+            textAlign='center'
+            m={1}
+            fontWeight='fontWeightBold'
+            fontSize={26}
+            lineHeight={2}
+          >
+            {this.state.currentProject.Name}
+          </Box>
           <Grid
             container
             justify='center'
@@ -221,6 +261,7 @@ class CreateIssue extends Component {
                         required
                         onChange={(e) => this.handleLabelChange(e.target.value)}
                         id='my-input'
+                        value={this.state.newlabels}
                       />
                     </FormControl>
                     <Box className={classes.root2}>

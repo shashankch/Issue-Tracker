@@ -12,8 +12,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 const useStyles = (theme) => ({
   root: {
     maxWidth: 345,
@@ -37,6 +40,7 @@ class CreateProject extends Component {
       name: '',
       description: '',
       author: '',
+      open: false,
     };
   }
   handleFieldChange = (value, field) => {
@@ -61,13 +65,48 @@ class CreateProject extends Component {
           LabelsList: [],
         }),
       );
+
+      this.handleClickOpen();
+      this.setState({
+        name: '',
+        description: '',
+        author: '',
+      });
     }
+  };
+
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
   };
   render() {
     const { classes } = this.props;
     return (
       <Grid container className={classes.root2} spacing={2}>
         <Grid item xs={12}>
+          <Dialog
+            open={this.state.open}
+            onClose={this.handleClose}
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
+          >
+            <DialogTitle id='alert-dialog-title'>
+              {"Use Google's location service?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>
+                New Project Created !!
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleClose} color='primary' autoFocus>
+                ok
+              </Button>
+            </DialogActions>
+          </Dialog>
           <Grid
             container
             justify='center'

@@ -11,7 +11,18 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
+
+import { InputLabel, FormControl, Input } from '@material-ui/core';
+
+import Chip from '@material-ui/core/Chip';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+
 const useStyles = (theme) => ({
+  formControl: {
+    margin: theme.spacing(0.5),
+    minWidth: 190,
+  },
   root: {
     height: 350,
     width: 350,
@@ -31,18 +42,31 @@ const useStyles = (theme) => ({
   },
 });
 
+const ITEM_HEIGHT = 38;
+const ITEM_PADDING_TOP = 4;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 class ProjectDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentProject: '',
       currentIssue: '',
+      labels: [],
+      toggle: false,
     };
   }
 
   componentDidMount() {
     let current = this.props.projects.filter(
-      (proj) => proj.Id == this.props.match.params.id
+      (proj) => proj.Id == this.props.match.params.id,
     );
 
     this.setState({
@@ -55,14 +79,60 @@ class ProjectDetails extends Component {
       currentIssue: this.state.currentProject.Issues,
     });
   }
+  handleChange = (event) => {
+    console.log('labels::', event.target.value);
+    this.setState({ labels: event.target.value });
+    if (event.target.value.length > 0) {
+      let filtered = this.state.currentProject.Issues.filter((a) => {
+        let flag = false;
+        for (let i = 0; i < a.labels.length; i++) {
+          if (event.target.value.indexOf(a.labels[i]) !== -1) {
+            flag = true;
+            break;
+          }
+        }
+        return flag;
+      });
+
+      console.log('this.filtered something', filtered);
+      this.setState({
+        currentIssue: filtered,
+      });
+    } else {
+      this.setState({
+        currentIssue: this.state.currentProject.Issues,
+      });
+    }
+  };
+
+  handleChangeMultiple = (event) => {
+    const { options } = event.target;
+    const value = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        value.push(options[i].value);
+      }
+    }
+
+    this.setState({ labels: value });
+  };
 
   sortByIssue = () => {
-    let sorted = this.state.currentProject.Issues.sort((a, b) => {
-      return a.number - b.number;
-    });
-    this.setState({
-      currentIssue: sorted,
-    });
+    console.log('this.state.toggle', this.state.toggle);
+    if (this.state.toggle) {
+      let sorted = this.state.currentProject.Issues.sort((a, b) => {
+        return b.number - a.number;
+      });
+      this.setState({
+        currentIssue: sorted,
+        toggle: !this.state.toggle,
+      });
+    } else {
+      this.setState({
+        currentIssue: this.state.currentProject.Issues,
+        toggle: !this.state.toggle,
+      });
+    }
   };
 
   searchByTitleAndDesc = (value) => {
@@ -79,6 +149,15 @@ class ProjectDetails extends Component {
       });
     }
   };
+  getStyles(name, theme) {
+    const { labels } = this.state;
+    console.log('labels', labels);
+    return {
+      fontWeight: labels.includes(name)
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+    };
+  }
 
   filterByAuthor = (author) => {
     if (author.length > 0) {
@@ -94,18 +173,16 @@ class ProjectDetails extends Component {
       });
     }
   };
-  filterByLabels = () => {
-    //TODO...
-  };
+
   render(props) {
     console.log('Name', this.state.currentProject);
     const { Id } = this.state.currentProject;
-    const { classes } = this.props;
+    const { classes, theme } = this.props;
 
     return (
       <Grid container className={classes.root2} spacing={2}>
         <Grid item xs={12}>
-        <Box
+          <Box
             textAlign='center'
             m={1}
             fontWeight='fontWeightBold'
@@ -127,7 +204,6 @@ class ProjectDetails extends Component {
             </Link>
           </Grid>
 
-          
           <Box
             textAlign='center'
             m={1}
@@ -137,12 +213,7 @@ class ProjectDetails extends Component {
           >
             Active Issues
           </Box>
-          <Grid
-            container
-            justify='center'
-            spacing={4}
-           
-          >
+          <Grid container justify='center' spacing={4}>
             <Fab
               color='primary'
               aria-label='add'
@@ -151,16 +222,6 @@ class ProjectDetails extends Component {
               className={classes.controlsMargin}
             >
               Sort By Issue
-            </Fab>
-
-            <Fab
-              color='primary'
-              aria-label='add'
-              variant='extended'
-              onClick={this.filterByLabels}
-              className={classes.controlsMargin}
-            >
-              Filter By Label
             </Fab>
 
             <TextField
@@ -183,7 +244,48 @@ class ProjectDetails extends Component {
               onChange={(e) => this.searchByTitleAndDesc(e.target.value)}
             />
           </Grid>
+          <Box textAlign='center' m={4}>
+            <FormControl className={classes.formControl}>
+              <InputLabel id='demo-mutiple-chip-label'>
+                Filter By Labels
+              </InputLabel>
+              <Select
+                labelId='demo-mutiple-chip-label'
+                id='demo-mutiple-chip'
+                multiple
+                value={this.state.labels}
+                onChange={this.handleChange}
+                input={<Input id='select-multiple-chip' />}
+                renderValue={(selected) => (
+                  <div className={classes.chips}>
+                    {selected.map((value) => (
+                      <Chip
+                        key={value}
+                        label={value}
+                        className={classes.chip}
+                      />
+                    ))}
+                  </div>
+                )}
+                MenuProps={MenuProps}
+              >
+                {this.state.currentProject.LabelsList &&
+                  this.state.currentProject.LabelsList.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={this.getStyles(
+                        name,
 
+                        theme,
+                      )}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
           <Grid
             container
             justify='center'
@@ -236,4 +338,4 @@ class ProjectDetails extends Component {
   }
 }
 
-export default withStyles(useStyles)(ProjectDetails);
+export default withStyles(useStyles, { withTheme: true })(ProjectDetails);
