@@ -6,10 +6,11 @@ export function createProject(project) {
     project,
   };
 }
-export function createIssue(issue,id) {
+export function createIssue(issue, id, list) {
   return {
     type: CREATE_ISSUE,
     issue,
-    id
+    id,
+    list,
   };
 }

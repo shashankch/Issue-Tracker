@@ -7,12 +7,12 @@ import { InputLabel, FormControl, Input } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
+
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+
 
 const useStyles = (theme) => ({
   root: {
@@ -24,6 +24,9 @@ const useStyles = (theme) => ({
   },
   cardsMargin: {
     marginTop: 50,
+  },
+  btnMargin: {
+    marginBottom: 20,
   },
 });
 
@@ -125,22 +128,19 @@ class CreateProject extends Component {
                       />
                     </FormControl>
                   </CardContent>
+
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    size='medium'
+                    startIcon={<SaveIcon />}
+                    onClick={this.handleFormSubmit}
+                    className={classes.btnMargin}
+                  >
+                    Save Project
+                  </Button>
                 </CardActionArea>
-                <CardActions>
-                  <FormControl>
-                    <Button
-                      variant='contained'
-                      color='primary'
-                      size='medium'
-                      startIcon={<SaveIcon />}
-                      onClick={this.handleFormSubmit}
-                    >
-                      Save Project
-                    </Button>
-                  </FormControl>
-                </CardActions>
               </Card>
-              <h3>Create Project form</h3>
             </Box>
           </Grid>
         </Grid>

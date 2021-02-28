@@ -17,10 +17,11 @@ export function issues(state = initialState, action) {
     case CREATE_ISSUE:
       console.log('state333', state);
       let result = state.Projects.filter(
-        (proj) => parseInt(proj.Id) === parseInt(action.id)
+        (proj) => parseInt(proj.Id) === parseInt(action.id),
       );
       console.log('stat555e', result[0].Issues);
       let iss = result[0].Issues;
+      result[0].LabelsList.push(action.list);
       iss.push(action.issue);
       return {
         ...state,

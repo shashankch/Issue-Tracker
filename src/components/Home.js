@@ -12,8 +12,8 @@ import AddIcon from '@material-ui/icons/Add';
 import Box from '@material-ui/core/Box';
 const useStyles = makeStyles({
   root: {
-    height: 350,
-    width: 350,
+    height: 345,
+    width: 345,
     margin: 10,
   },
   root2: {
