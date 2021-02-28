@@ -11,7 +11,6 @@
 - Filter by author.
 - Search by title and description.
 
-![project screenshots]('./src/helpers/Capture.PNG')
 ![project screenshots]('./src/helpers/Capture2.PNG')
 
 ## Steps to run locally:
