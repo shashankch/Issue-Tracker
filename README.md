@@ -11,7 +11,8 @@
 - Filter by author.
 - Search by title and description.
 
-![project screenshots](helpers/Capture2.PNG)
+![project screenshots](assets/Capture.PNG)
+![project screenshots](assets/Capture2.PNG)
 
 ## Steps to run locally:
 
